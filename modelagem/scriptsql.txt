@@ -1,0 +1,65 @@
+-- Criação do banco de dados
+CREATE DATABASE LivreMundi;
+USE LivreMundi;
+
+-- Tabela User
+CREATE TABLE User (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL
+);
+
+
+-- Tabela Destination
+CREATE TABLE Destination (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    nome VARCHAR(100) NOT NULL,
+    descricao TEXT,
+    imagem_url VARCHAR(255),
+    promocao boolean,
+    preco decimal(10,2),
+    preco_oferta decimal(10,2) 
+);
+
+-- Tabela intermediária UserDestination
+CREATE TABLE UserDestination (
+    user_id INT,
+    destination_id INT,
+    quantidade int not null,
+    valor_total decimal(10,2),
+    data_compra DATE DEFAULT (CURDATE()),
+    PRIMARY KEY (user_id, destination_id), -- Chave primária composta
+    FOREIGN KEY (user_id) REFERENCES User(id) ON DELETE CASCADE,
+    FOREIGN KEY (destination_id) REFERENCES Destination(id) ON DELETE CASCADE
+);
+
+
+-- Tabela Message
+CREATE TABLE Message (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+	email varchar(255) not null unique,
+    mensagem TEXT NOT NULL,
+    data_envio TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+ 
+);
+
+INSERT INTO User (nome, email, senha) VALUES (
+    ('João Silva', 'joao.silva@example.com', 'senha123'),
+    ('Maria Souza', 'maria.souza@example.com', 'senha456'),
+    ('Carlos Oliveira', 'carlos.oliveira@example.com', 'senha789')
+    );
+    
+INSERT INTO Destination (nome, descricao, imagem_url, promocao, preco, preco_oferta)
+VALUES 
+    ('Caribe', 'Desfrute de dias ensolarados em praias com águas cristalinas.', 'img/caribe1.jpeg', TRUE, 5000.00, 4000.00),
+    ('Recife', 'Conheça lugares históricos e aprenda sobre novas culturas.', 'img/cultura.webp', FALSE, 3000.00, NULL),
+    ('Machu Picchu', 'Trilhas, montanhas e paisagens únicas para os mais aventureiros.', 'img/aventura2.jpg', TRUE, 6000.00, 5000.00
+    
+    );
+    
+    INSERT INTO UserDestination (user_id, destination_id, quantidade, valor_total, data_compra)
+VALUES 
+    (1, 1, 2, 8000.00, '2023-10-25'), -- João Silva comprou 2 pacotes para o Caribe
+    (2, 2, 1, 3000.00, '2023-10-24'), -- Maria Souza comprou 1 pacote para Recife
+    (3, 3, 3, 15000.00, '2023-10-23'); -- Carlos Oliveira comprou 3 pacotes para Machu Picchu
